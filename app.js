@@ -1,3 +1,4 @@
+var mongoose = require('./models/connection');
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -7,7 +8,6 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
-var mongoose = require('./models/connection');
 var session = require('express-session');
 var app = express();
 

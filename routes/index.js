@@ -1,10 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var request = require("sync-request");
+
 //  Importez ce fichier connection.js au tout début du fichier /routes/index.js
 var cityModel = require('../models/cities');
 
-
+// API 
 const url = 'http://api.openweathermap.org/data/2.5/';
 const apiKey = 'f6b31be78ccd0fc118dcb9f391b8ead8';
 
