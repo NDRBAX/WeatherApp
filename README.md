@@ -20,7 +20,7 @@ Weather App is an application that will allow you to display the weather of citi
 
 ## :fire: Credits <a name = "credits"></a>
 
-- Project logo : Photo from <a href="https://www.flaticon.com/premium-icon/rainy-day_3093390?term=weather&page=1&position=6&page=1&position=6&related_id=3093390&origin=search">flaticon</a>
+- Project logo : <a href="https://www.flaticon.com/free-icons/weather" title="weather icons">Weather icons created by Freepik - Flaticon</a>
 - Project realized during the <a href="https://www.lacapsule.academy/">La Capsule Academy</a> bootcamp
 
 
