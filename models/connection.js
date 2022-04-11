@@ -9,7 +9,7 @@ const uri = `mongodb+srv://${admin}:${pass}@weatherapp.wty4r.mongodb.net/${proje
 
 
 var options = {
-    connectTimeoutMS: 5000,
+    connectTimeoutMS: 50000,
     /* 
        ? connectTimeoutMS : permet de définir la durée de la tentative de connexion à la base de données. Au bout de 5000ms, si la connexion n’est pas effective, la tentative de connexion s’arrêtera */
     useNewUrlParser: true,
