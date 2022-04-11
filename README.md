@@ -1,6 +1,6 @@
 <p align="center">
   <a href="" rel="noopener">
- <img src="assets/rainy-day.png" alt="Project logo" style='height:150px; width:150px; border-radius:15px'></a>
+ <img src="assets/rainy-day.png" alt="Project logo" style='height:100px; width:100px; border-radius:15px'></a>
 </p>
 <h1 align="center">WeatherApp Daily</h1>
 
