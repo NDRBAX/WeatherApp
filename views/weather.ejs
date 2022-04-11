@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/de7107e192.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <title>WeatherApp</title>
+</head>
+
+<body>
+
+
+    <!-- HEADER -->
+    <nav class=" header navbar navbar-light bg-dark">
+        Weather App
+        <a class="logout" href="/logout">Deconnexion</a>
+    </nav>
+
+    <!-- GRID -->
+    <div class="container">
+        <!-- Container à largeur fixe et centré. La classe .container fournit un conteneur responsive à largeur fixe -->
+
+        <div class="row">
+            <!-- Les row sont des wrappers pour les colonnes -->
+
+            <div class="col-12 offset-lg-6 col-lg-6">
+                <!-- Mise en place du responsive 12 colonnes pour les très petits écrans jusqu'au écrans moyens. 6 colonnes à partir des grands écrans - .offset-lg-6 décale de six colonnes pour les grands écrans -->
+
+                <!-- NEW CITY ##################################################################################################################-->
+                <form action="/add-city" method="post">
+                    <div class="input-group mb-3">
+                        <input name="newcity" type="text" class="form-control" placeholder="Enter city name" aria-label="new city name">
+                        <div class="input-group-append">
+                            <button class="btn btn-warning" type="submit" id="btn-add-2">Add</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- MAP ################################################################################################################## -->
+            <div class="col-12 col-lg-6">
+                <!-- <img class="img-fluid" src="/images/map.png" alt="map provisoire"> -->
+                <!-- .img-fluid rend les images responsives avec une max-width de 100% et une height:auto -->
+                <div id="worldmap"></div>
+            </div>
+
+
+            <!-- CITY LIST ################################################################################################################## -->
+            <div class="col-12 col-lg-6">
+                <!-- SI la liste des villes est vide = message suivant sera affiché -->
+                <% if (cityList.length == 0) {%>
+                    <span class="empty">No cities found</span>
+                    <%}%>
+                        <!-- UPDATE CITIES ################################################################################################################## -->
+                        <div class="d-flex justify-content-center">
+                            <a class="update-cities" href="/update-cities">Update Cities <i class="fas fa-sync-alt"></i></a>
+                        </div>
+                        <ul class="list-group">
+
+                            <% for (let i = 0; i < cityList.length; i++) {%>
+                                <li class="list-group-item d-flex justify-content-between align-items-center" data-lon="<%=cityList[i].lon %>" data-lat="<%=cityList[i].lat %>" data-name="<%=cityList[i].name %>">
+                                    <%= cityList[i].name %>
+                                        <div>
+                                            <span><%= cityList[i].desc %></span>
+                                            <img src="<%=cityList[i].image%>">
+                                            <span class="badge badge-warning badge-pill"><%= cityList[i].temp_min %>°c</span>
+                                            <span class="badge badge-secondary badge-pill"><%= cityList[i].temp_max %>°c</span>
+                                        </div>
+                                        <!-- DELETE CITIES ##################################################################################################################-->
+                                        <a href="/delete-city?id=<%=cityList[i].id%>"><i class="deletepicto far fa-times-circle"></i></a>
+                                </li>
+                                <% } %>
+                        </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="/javascripts/script.js"></script>
+</body>
+
+</html>
