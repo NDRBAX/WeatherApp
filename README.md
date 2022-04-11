@@ -4,6 +4,9 @@
 </p>
 <h1 align="center">WeatherApp Daily</h1>
 
+<p align="center">
+ <img src="assets/preview.jpeg" alt="Project logo" style='height:auto; width:700px; border-radius:15px'></a>
+</p>
 
 ## :newspaper: About <a name = "about"></a>
 
