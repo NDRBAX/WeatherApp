@@ -12,7 +12,10 @@ const citySchema = new mongoose.Schema({
     temp_max: Number,
     temp_min: Number,
     lon: Number,
-    lat: Number
+    lat: Number,
+    user: {
+        id: { type: mongoose.Schema.Types.ObjectId, ref: 'users' }
+    }
 });
 /*
 ? l’objectif du schéma -> définir les règles à respecter pour insérer des documents dans notre collection */
