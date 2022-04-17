@@ -13,7 +13,7 @@ const citySchema = new mongoose.Schema({
     temp_min: Number,
     lon: Number,
     lat: Number,
-    user: {
+    owner: {
         id: { type: mongoose.Schema.Types.ObjectId, ref: 'users' }
     }
 });

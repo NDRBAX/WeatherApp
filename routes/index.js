@@ -66,24 +66,31 @@ router.post('/add-city', async function(req, res, next) {
     console.log(`Nouvelle ville : ${req.body.newcity}`);
 
     if (searchCity == null && weatherRes.name) { // s'il n'existe pas, alors ajouter les informations depuis l'API
+        async function run() {
+            try {
+                var userLogin = {
+                    id: req.user._id,
+                };
 
-        var userLogin = {
-            id: req.user._id,
-        };
+                console.log(userLogin);
 
-        console.log(userLogin);
+                var newCity = {
+                    name: upperFirst(req.body.newcity),
+                    image: `http://openweathermap.org/img/wn/${weatherRes.weather[0].icon}.png`,
+                    desc: weatherRes.weather[0].description,
+                    temp_max: weatherRes.main.temp_max,
+                    temp_min: weatherRes.main.temp_min,
+                    lon: weatherRes.coord.lon,
+                    lat: weatherRes.coord.lat,
+                    user: userLogin
+                }
+                await newCity.save();
 
-        var newCity = {
-            name: upperFirst(req.body.newcity),
-            image: `http://openweathermap.org/img/wn/${weatherRes.weather[0].icon}.png`,
-            desc: weatherRes.weather[0].description,
-            temp_max: weatherRes.main.temp_max,
-            temp_min: weatherRes.main.temp_min,
-            lon: weatherRes.coord.lon,
-            lat: weatherRes.coord.lat,
-            user: userLogin
+            } catch (e) {
+                console.log(e.message)
+            }
         }
-        await newCity.save();
+
     }
     console.log(`Les coordonées de la ville sont : ${weatherRes.coord.lon},  ${weatherRes.coord.lat}`);
 
