@@ -20,6 +20,7 @@ router.post('/sign-up', async function(req, res, next) { // Pour éviter les dou
                 username: req.body.usernameFromFront,
                 email: req.body.emailFromFront,
                 password: req.body.passwordFromFront
+
             })
             // On sauvegarde les données de la variable newUser
         var newUserSave = await newUser.save();
@@ -64,7 +65,7 @@ router.post('/sign-in', async function(req, res, next) {
 /* LOGOUT */
 router.get('/logout', function(req, res, next) {
     // On vide les variables session
-    req.session.user = null;
+    req.session.destroy;
     // Le logout nous ramène sur la page root 
     res.redirect('/')
 });

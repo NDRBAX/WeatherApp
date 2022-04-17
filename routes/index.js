@@ -1,10 +1,30 @@
+/*
+TODO [] AFFICHER LES VILLES PAR UTILISATEUR 
+TODO [] MODIFIER DESIGN DU BOUTON UPDATE
+TODO [] FIL URSS ACTUALITÉS MÉTÉO EN DESSOUS 
+
+TODO [x] ENCRYPTER LE MOT DE PASSE
+TODO [] VERIFICATION PAR MAIL POUR ACTIVER LE COMPTE 
+TODO [] AFFICHER MESSAGE QUAND IL Y A MAUVAIS ID OU PASS
+        * MOT DE PASSE OU IDENTIFIANT NE CORRESPONDNET PAS
+
+TODO [x] HEBERGER SUR VERCEL / HEROKU
+TODO [x] METTRE EN PUBLIC SUR GITHUB
+*/
+
 var express = require('express');
 var router = express.Router();
 var request = require("sync-request");
 
 //  Importez ce fichier connection.js au tout début du fichier /routes/index.js
 var cityModel = require('../models/cities');
+var userModel = require('../models/users');
 
+var cityList = [];
+
+function upperFirst(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLocaleLowerCase();
+}
 // API 
 const url = 'http://api.openweathermap.org/data/2.5/';
 const apiKey = 'f6b31be78ccd0fc118dcb9f391b8ead8';
@@ -33,43 +53,41 @@ router.get('/weather', async function(req, res, next) {
        ? L'opérateur await permet d'attendre la résolution d'une promesse (Promise). Il ne peut être utilisé qu'au sein d'une fonction asynchrone (définie avec l'instruction async function). L'expression await interrompt l'exécution d'une fonction asynchrone et attend la résolution d'une promesse. Lorsque la promesse est résolue (tenue ou rompue), la valeur est renvoyée et l'exécution de la fonction asynchrone reprend. Si la valeur de l'expression n'est pas une promesse, elle est convertie en une promesse résolue ayant cette valeur. Si la promesse est rompue, l'expression await lève une exception avec la raison. */
 
 });
-/*
-TODO [] AFFICHER LES VILLES PAR UTILISATEUR 
-TODO [] MODIFIER DESIGN DU BOUTON UPDATE
-TODO [] FIL URSS ACTUALITÉS MÉTÉO EN DESSOUS 
-
-TODO [x] ENCRYPTER LE MOT DE PASSE
-TODO [] VERIFICATION PAR MAIL POUR ACTIVER LE COMPTE 
-TODO [] AFFICHER MESSAGE QUAND IL Y A MAUVAIS ID OU PASS
-        * MOT DE PASSE OU IDENTIFIANT NE CORRESPONDNET PAS
-
-TODO [x] HEBERGER SUR VERCEL / HEROKU
-TODO [x] METTRE EN PUBLIC SUR GITHUB
-*/
 
 /* ADD CITY */
 router.post('/add-city', async function(req, res, next) {
     var weatherReq = request("GET", `${url}weather?q=${req.body.newcity}&lang=fr&units=metric&appid=${apiKey}`); // Récuperer les données météos de l'API
     var weatherRes = JSON.parse(weatherReq.body); // La méthode JSON.parse() analyse une chaîne de caractères JSON et construit la valeur JavaScript ou l'objet décrit par cette chaîne. 
 
-    var status = await cityModel.findOne({ name: req.body.newcity.slice(0, 1).toUpperCase() + req.body.newcity.slice(1).toLocaleLowerCase() }); // vérifier si le nom de ville saisie (peu importe l'orthographe) existe déjà dans la bse de données 
+    /*var searchUser = await userModel.findById(req.session.user);
+    console.log(`searchUser #################### : ${searchUser}`); searchUser != null && */
+
+    var searchCity = await cityModel.findOne({ name: upperFirst(req.body.newcity) }); // vérifier si le nom de ville saisie (peu importe l'orthographe) existe déjà dans la bse de données 
     console.log(`Nouvelle ville : ${req.body.newcity}`);
 
-    if (status == null && weatherRes.name) { // s'il n'existe pas, alors ajouter les informations depuis l'API
-        var newCity = new cityModel({
-            name: req.body.newcity.slice(0, 1).toUpperCase() + req.body.newcity.slice(1).toLocaleLowerCase(),
+    if (searchCity == null && weatherRes.name) { // s'il n'existe pas, alors ajouter les informations depuis l'API
+
+        var userLogin = {
+            id: req.user._id,
+        };
+
+        console.log(userLogin);
+
+        var newCity = {
+            name: upperFirst(req.body.newcity),
             image: `http://openweathermap.org/img/wn/${weatherRes.weather[0].icon}.png`,
             desc: weatherRes.weather[0].description,
             temp_max: weatherRes.main.temp_max,
             temp_min: weatherRes.main.temp_min,
             lon: weatherRes.coord.lon,
-            lat: weatherRes.coord.lat
-        });
+            lat: weatherRes.coord.lat,
+            user: userLogin
+        }
         await newCity.save();
     }
     console.log(`Les coordonées de la ville sont : ${weatherRes.coord.lon},  ${weatherRes.coord.lat}`);
 
-    cityList = await cityModel.find();
+    cityList = await userModel.findById('625c3da900cc9c2043615f0c');
     res.render('weather', { cityList });
 });
 
