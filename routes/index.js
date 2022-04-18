@@ -59,44 +59,50 @@ router.post('/add-city', async function(req, res, next) {
     var weatherReq = request("GET", `${url}weather?q=${req.body.newcity}&lang=fr&units=metric&appid=${apiKey}`); // Récuperer les données météos de l'API
     var weatherRes = JSON.parse(weatherReq.body); // La méthode JSON.parse() analyse une chaîne de caractères JSON et construit la valeur JavaScript ou l'objet décrit par cette chaîne. 
 
-    /*var searchUser = await userModel.findById(req.session.user);
-    console.log(`searchUser #################### : ${searchUser}`); searchUser != null && */
-
-    var searchCity = await cityModel.findOne({ name: upperFirst(req.body.newcity) }); // vérifier si le nom de ville saisie (peu importe l'orthographe) existe déjà dans la bse de données 
+    var status = await cityModel.findOne({ name: req.body.newcity.slice(0, 1).toUpperCase() + req.body.newcity.slice(1).toLocaleLowerCase() }); // vérifier si le nom de ville saisie (peu importe l'orthographe) existe déjà dans la bse de données 
     console.log(`Nouvelle ville : ${req.body.newcity}`);
 
-    if (searchCity == null && weatherRes.name) { // s'il n'existe pas, alors ajouter les informations depuis l'API
-        async function run() {
-            try {
-                var userLogin = {
-                    id: req.user._id,
-                };
 
-                console.log(userLogin);
+    if (status == null && weatherRes.name) { // s'il n'existe pas, alors ajouter les informations depuis l'API
+        var aggregate = userModel.aggregate();
+        aggregate.group({ _id: '$ownerCities' });
+        var data = await aggregate.exec();
+        console.log(data);
 
-                var newCity = {
-                    name: upperFirst(req.body.newcity),
-                    image: `http://openweathermap.org/img/wn/${weatherRes.weather[0].icon}.png`,
-                    desc: weatherRes.weather[0].description,
-                    temp_max: weatherRes.main.temp_max,
-                    temp_min: weatherRes.main.temp_min,
-                    lon: weatherRes.coord.lon,
-                    lat: weatherRes.coord.lat,
-                    user: userLogin
-                }
-                await newCity.save();
+        data.push({
+            name: upperFirst(req.body.newcity),
+            image: `http://openweathermap.org/img/wn/${weatherRes.weather[0].icon}.png`,
+            desc: weatherRes.weather[0].description,
+            temp_max: weatherRes.main.temp_max,
+            temp_min: weatherRes.main.temp_min,
+            lon: weatherRes.coord.lon,
+            lat: weatherRes.coord.lat
+        })
+        await data.save();
+        /* var newCity = new cityModel({
+            name: req.body.newcity.slice(0, 1).toUpperCase() + req.body.newcity.slice(1).toLocaleLowerCase(),
+            image: `http://openweathermap.org/img/wn/${weatherRes.weather[0].icon}.png`,
+            desc: weatherRes.weather[0].description,
+            temp_max: weatherRes.main.temp_max,
+            temp_min: weatherRes.main.temp_min,
+            lon: weatherRes.coord.lon,
+            lat: weatherRes.coord.lat
+        });
+        citySaved = await newCity.save();
 
-            } catch (e) {
-                console.log(e.message)
+        await userModel.updateOne({ ownerCities: citySaved[0]._id }).catch(
+            error => {
+                console.log(error);
             }
-        }
+        ); */
 
     }
     console.log(`Les coordonées de la ville sont : ${weatherRes.coord.lon},  ${weatherRes.coord.lat}`);
 
-    cityList = await userModel.findById('625c3da900cc9c2043615f0c');
+    cityList = await userModel.find();
     res.render('weather', { cityList });
 });
+
 
 /* DELETE City. */
 router.get('/delete-city', async function(req, res, next) {
@@ -115,7 +121,7 @@ router.get('/update-cities', async function(req, res, next) {
         var weatherReq = request("GET", `${url}/weather?q=${cityList[i].name}&lang=fr&units=metric&appid=${apiKey}`);
         var weatherRes = JSON.parse(weatherReq.body);
 
-        await cityModel.updateOne({
+        await cityModel.updateOne([{
             _id: cityList[i].id
         }, {
             name: cityList[i].name,
@@ -125,7 +131,7 @@ router.get('/update-cities', async function(req, res, next) {
             temp_max: weatherRes.main.temp_max,
             lon: weatherRes.coord.lon,
             lat: weatherRes.coord.lat
-        })
+        }])
     }
     var cityList = await cityModel.find();
     res.render('weather', { cityList })

@@ -5,7 +5,10 @@ var userSchema = new mongoose.Schema({
     username: String,
     email: String,
     password: String,
-    // Pour relier les documents de la collection user et cities, nous allons commencer par créer le schéma et le modèle de chaque collection
+    ownerCities: [{
+            id: { type: mongoose.Schema.Types.ObjectId, ref: 'cities' }
+        }]
+        // Pour relier les documents de la collection user et cities, nous allons commencer par créer le schéma et le modèle de chaque collection
 });
 
 
