@@ -92,6 +92,9 @@ $ npm start
 
 Project logo : <a href="https://www.flaticon.com/free-icons/weather" title="weather icons">Weather icons created by Freepik - Flaticon</a>\
 Project realized during the <a href="https://www.lacapsule.academy/">La Capsule Academy</a> bootcamp\
+
+</br>
+
 Made with :heart: by <a href="https://github.com/NDRBAX" target="_blank">NDRBAX</a>
 
 &#xa0;
